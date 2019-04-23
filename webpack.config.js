@@ -121,6 +121,7 @@ module.exports = (env, options) => {
             new MiniCssExtractPlugin({
                 filename: config.build.styles
             }),
+            new VueLoaderPlugin(),
             ...HtmlWebpackPlugins
         ]
     }
