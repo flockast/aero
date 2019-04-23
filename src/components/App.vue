@@ -9,7 +9,7 @@
 
     <section class="content">
       <div class="container">
-
+        <Tabs />
       </div>
     </section>
 
@@ -17,7 +17,12 @@
 </template>
 
 <script>
+  import Tabs from "./Tabs.vue";
+
   export default {
+    components: {
+      Tabs
+    },
     data() {
       return {
 
