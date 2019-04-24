@@ -9,12 +9,7 @@
       :line-class="'tabs-list__line'"
       @onClick="handleClickOnTab"/>
       <div class="tabs-content">
-        <div v-if="currentTab == 'departure'">
-          dep
-        </div>
-        <div v-if="currentTab == 'arrival'">
-          arr
-        </div>
+          <board :type="currentTab"/>
       </div>
   </div>
 </template>
@@ -22,10 +17,12 @@
 <script>
 
   import TabsLine from 'vue-tabs-with-active-line';
+  import Board from './Board.vue';
 
   export default {
     components: {
-      TabsLine
+      TabsLine,
+      Board
     },
     data() {
       return {
@@ -51,6 +48,8 @@
 </script>
 
 <style lang="scss">
+  $accent: steelblue;
+
   .tabs-list {
     position: relative;
     display: flex;
@@ -72,7 +71,7 @@
         outline: none;
       }
       &--active {
-        color: #B63A4B;
+        color: $accent;
       }
     }
     &__line {
@@ -80,7 +79,7 @@
       bottom: 0;
       left: 0;
       height: .3rem;
-      background: #B63A4B;
+      background: $accent;
       border-radius: .3rem;
       transition: transform 0.4s ease, width 0.4s ease;
     }
