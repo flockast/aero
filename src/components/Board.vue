@@ -4,20 +4,20 @@
     <div class="board-header">
       <div class="board-header__search">
         <input type="text"
-               v-model="flight"
-               :placeholder="`search ${type}`">
+               v-model="flightSearch"
+               placeholder="поиск рейса">
       </div>
       <div class="board-header__checkbox">
-        <label class="checkbox">
-          Delay
-          <input type="checkbox" class="checkbox__input">
+        <label class="checkbox">Задержка
+          <input type="checkbox" class="checkbox__input" v-model="delay">
           <span class="checkbox__checkmark"></span>
         </label>
       </div>
     </div>
 
     <div class="board-table">
-      <Table/>
+      <Table :headers="headers"
+             :flights="filteredFlights"/>
     </div>
 
   </div>
@@ -28,13 +28,22 @@
   import Table from './Table.vue';
 
   export default {
-    props: ["type"],
+    props: ["headers", "flights"],
     components: {
       Table
     },
+    computed: {
+      filteredFlights() {
+        return this.flights.filter(flight => {
+          let delay = flight.delay !== undefined || !this.delay;
+          return flight.flightNumber.indexOf(this.flightSearch) !== -1 && delay;
+        })
+      }
+    },
     data() {
       return {
-        flight: null
+        flightSearch: '',
+        delay: false
       }
     }
   }
@@ -43,7 +52,7 @@
 <style lang="scss">
   $accent: steelblue;
   .board {
-
+    margin-bottom: 5rem;
   }
   .board-header {
     display: flex;

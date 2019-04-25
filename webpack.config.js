@@ -48,7 +48,12 @@ module.exports = (env, options) => {
             publicPath: config.publicPath
         },
         devServer: {
-            overlay: true
+            overlay: true,
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+                "Access-Control-Allow-Methods": "GET, POST, PUT"
+            }
         },
         devtool: isDev ? 'source-map' : '',
         module: {

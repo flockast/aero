@@ -3,7 +3,7 @@
 
     <header class="header">
       <div class="container">
-        <div class="header__logo">airport board</div>
+        <div class="header__logo">Airport board</div>
       </div>
     </header>
 

@@ -9,7 +9,14 @@
       :line-class="'tabs-list__line'"
       @onClick="handleClickOnTab"/>
       <div class="tabs-content">
-          <board :type="currentTab"/>
+        <div v-if="currentTab == 'arr'">
+          <board :headers="['время', 'задержка', 'вылет из', 'рейс']"
+                 :flights="this.arrivals"/>
+        </div>
+        <div v-if="currentTab == 'dep'">
+          <board :headers="['время', 'задержка', 'прилёт в', 'рейс']"
+                 :flights="this.departures"/>
+        </div>
       </div>
   </div>
 </template>
@@ -18,6 +25,8 @@
 
   import TabsLine from 'vue-tabs-with-active-line';
   import Board from './Board.vue';
+  import arrivalsJSON from '../js/arrivals.json';
+  import departuresJSON from '../js/departures.json';
 
   export default {
     components: {
@@ -28,21 +37,47 @@
       return {
         tabs: [
           {
-            title: 'Departure',
-            value: 'departure'
+            title: 'Прилёт',
+            value: 'arr'
           },
           {
-            title: 'Arrival',
-            value: 'arrival'
+            title: 'Вылет',
+            value: 'dep'
           }
         ],
-        currentTab: 'departure'
+        currentTab: 'arr',
+        arrivals: '',
+        departures: ''
       }
     },
     methods: {
       handleClickOnTab(newTab) {
         this.currentTab = newTab;
+      },
+      getArrivals() {
+        return arrivalsJSON.flightTracks.map(flight => {
+          return {
+            'time': flight.departureDate.dateLocal,
+            'delay': flight.delayMinutes,
+            'place': flight.departureAirportFsCode,
+            'flightNumber': flight.flightNumber,
+          }
+        })
+      },
+      getDepartures() {
+        return departuresJSON.flightTracks.map(flight => {
+          return {
+            'time': flight.departureDate.dateLocal,
+            'delay': flight.delayMinutes,
+            'place': flight.arrivalAirportFsCode,
+            'flightNumber': flight.flightNumber,
+          }
+        })
       }
+    },
+    created() {
+      this.arrivals = this.getArrivals();
+      this.departures = this.getDepartures();
     }
   }
 </script>

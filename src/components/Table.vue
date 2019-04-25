@@ -3,22 +3,15 @@
     <table class="table">
       <thead>
       <tr>
-        <th>время</th>
-        <th>задержка</th>
-        <th>место</th>
-        <th>рейс</th>
-        <th>терминал</th>
-        <th>статус</th>
+        <th v-for="header in headers">{{ header }}</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="n in 10">
-        <td>08:30</td>
-        <td>+10</td>
-        <td>Москва</td>
-        <td>SU 199</td>
-        <td>A</td>
-        <td>Прибыл</td>
+      <tr v-for="flight in flights">
+        <td>{{ flight.time | moment('DD.MM.YY - HH:mm')}}</td>
+        <td>{{ flight.delay }}</td>
+        <td>{{ flight.place }}</td>
+        <td>{{ flight.flightNumber }}</td>
       </tr>
       </tbody>
     </table>
@@ -27,10 +20,11 @@
 
 <script>
   export default {
+    props: ["headers", "flights"],
     data() {
-        return {
+      return {
 
-        }
+      }
     }
   }
 </script>
