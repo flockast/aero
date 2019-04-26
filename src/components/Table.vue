@@ -8,8 +8,9 @@
       </thead>
       <tbody>
       <tr v-for="flight in flights">
-        <td>{{ flight.time | moment('DD.MM.YY - HH:mm')}}</td>
-        <td>{{ flight.delay }}</td>
+        <td>{{ flight.time | moment('DD.MM.YY / HH:mm')}}</td>
+        <td v-if="flight.delay">{{ flight.delay | moment('mm:ss') }}</td>
+        <td v-else>{{ 'без задержки' }}</td>
         <td>{{ flight.place }}</td>
         <td>{{ flight.flightNumber }}</td>
       </tr>
@@ -20,12 +21,7 @@
 
 <script>
   export default {
-    props: ["headers", "flights"],
-    data() {
-      return {
-
-      }
-    }
+    props: ["headers", "flights"]
   }
 </script>
 

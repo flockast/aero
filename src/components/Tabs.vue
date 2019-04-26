@@ -10,11 +10,11 @@
       @onClick="handleClickOnTab"/>
       <div class="tabs-content">
         <div v-if="currentTab == 'arr'">
-          <board :headers="['время', 'задержка', 'вылет из', 'рейс']"
+          <board :headers="['дата/время', 'задержка', 'вылет из', 'рейс']"
                  :flights="this.arrivals"/>
         </div>
         <div v-if="currentTab == 'dep'">
-          <board :headers="['время', 'задержка', 'прилёт в', 'рейс']"
+          <board :headers="['дата/время', 'задержка', 'прилёт в', 'рейс']"
                  :flights="this.departures"/>
         </div>
       </div>
@@ -60,8 +60,10 @@
             'time': flight.departureDate.dateLocal,
             'delay': flight.delayMinutes,
             'place': flight.departureAirportFsCode,
-            'flightNumber': flight.flightNumber,
+            'flightNumber': `${flight.carrierFsCode} ${flight.flightNumber}`,
           }
+        }).sort((a, b) => {
+            return new Date(a.time) - new Date(b.time);
         })
       },
       getDepartures() {
@@ -70,8 +72,10 @@
             'time': flight.departureDate.dateLocal,
             'delay': flight.delayMinutes,
             'place': flight.arrivalAirportFsCode,
-            'flightNumber': flight.flightNumber,
+            'flightNumber': `${flight.carrierFsCode} ${flight.flightNumber}`,
           }
+        }).sort((a, b) => {
+            return new Date(a.time) - new Date(b.time);
         })
       }
     },
