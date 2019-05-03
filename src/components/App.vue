@@ -22,9 +22,6 @@
     export default {
         components: {
             Tabs
-        },
-        data() {
-            return {}
         }
     }
 </script>
