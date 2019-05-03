@@ -52,7 +52,6 @@
                 currentTab: 'arr',
                 arrivals: '',
                 departures: '',
-                arrReady: false,
                 endpoint: "http://aero.flockast.ru"
             }
         },
