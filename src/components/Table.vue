@@ -20,29 +20,33 @@
 </template>
 
 <script>
-  export default {
-    props: ["headers", "flights"]
-  }
+    export default {
+        props: ["headers", "flights"]
+    }
 </script>
 
 <style lang="scss">
   .table-wrap {
     overflow-x: auto;
   }
+
   .table {
     border-collapse: collapse;
     width: 100%;
     font-size: 1.4rem;
+
     th {
       padding: 1rem .5rem;
       border-bottom: .2rem solid #525252;
       font-weight: bold;
       text-align: left;
     }
+
     td {
       padding: 1rem .5rem;
       border-bottom: .1rem solid #3c3c3c;
     }
+
     tr:hover {
       td {
         background: #333333;

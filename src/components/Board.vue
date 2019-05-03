@@ -25,28 +25,28 @@
 
 <script>
 
-  import Table from './Table.vue';
+    import Table from './Table.vue';
 
-  export default {
-    props: ['headers', 'flights'],
-    components: {
-      Table
-    },
-    computed: {
-      filteredFlights() {
-        return this.flights.filter(flight => {
-          let delay = flight.delay !== 0 || !this.delay;
-          return flight.flightNumber.indexOf(this.flightSearch) !== -1 && delay;
-        })
-      }
-    },
-    data() {
-      return {
-        flightSearch: '',
-        delay: false
-      }
+    export default {
+        props: ['headers', 'flights'],
+        components: {
+            Table
+        },
+        computed: {
+            filteredFlights() {
+                return this.flights.filter(flight => {
+                    let delay = flight.delay !== 0 || !this.delay;
+                    return flight.flightNumber.indexOf(this.flightSearch) !== -1 && delay;
+                })
+            }
+        },
+        data() {
+            return {
+                flightSearch: '',
+                delay: false
+            }
+        }
     }
-  }
 </script>
 
 <style lang="scss">
@@ -54,14 +54,17 @@
   .board {
     margin-bottom: 5rem;
   }
+
   .board-header {
     display: flex;
     margin-bottom: 3rem;
     border-bottom: .3rem solid white;
+
     &__search {
       position: relative;
       top: .3rem;
       flex: 1;
+
       input {
         display: block;
         width: 100%;
@@ -72,11 +75,13 @@
         font-family: 'Roboto Slab', sans-serif;
         color: white;
         padding: .5em 2em;
+
         &:focus {
           outline: none;
           border-color: $accent;
         }
       }
+
       &:before {
         content: "";
         position: absolute;
@@ -87,6 +92,7 @@
         background-image: svg-load('../img/search.svg');
       }
     }
+
     &__checkbox {
       padding: 0 1rem;
       background: #333;
@@ -95,6 +101,7 @@
       align-items: center;
     }
   }
+
   .board-table {
 
   }

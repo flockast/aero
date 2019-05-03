@@ -6,7 +6,7 @@ Vue.use(VueMoment);
 let el = document.getElementById('app');
 import App from "../components/App.vue";
 
-if(el) {
+if (el) {
     new Vue({
         el,
         components: {

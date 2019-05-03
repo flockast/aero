@@ -9,7 +9,7 @@
 
     <section class="content">
       <div class="container">
-        <Tabs />
+        <Tabs/>
       </div>
     </section>
 
@@ -17,29 +17,29 @@
 </template>
 
 <script>
-  import Tabs from "./Tabs.vue";
+    import Tabs from "./Tabs.vue";
 
-  export default {
-    components: {
-      Tabs
-    },
-    data() {
-      return {
-
-      }
+    export default {
+        components: {
+            Tabs
+        },
+        data() {
+            return {}
+        }
     }
-  }
 </script>
 
 <style lang="scss">
   .header {
     padding-top: 1em;
+
     &__logo {
       font-size: 4rem;
       font-weight: bold;
       text-transform: uppercase;
     }
   }
+
   .content {
     padding-top: 2em;
   }
