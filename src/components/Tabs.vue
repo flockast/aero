@@ -1,23 +1,28 @@
 <template>
   <div>
-    <TabsLine
-      :tabs="tabs"
-      :currentTab="currentTab"
-      :wrapper-class="'tabs-list'"
-      :tab-class="'tabs-list__item'"
-      :tab-active-class="'tabs-list__item--active'"
-      :line-class="'tabs-list__line'"
-      @onClick="handleClickOnTab"/>
+    <div class="fade-in" v-if="arrivals && departures">
+      <TabsLine
+        :tabs="tabs"
+        :currentTab="currentTab"
+        :wrapper-class="'tabs-list'"
+        :tab-class="'tabs-list__item'"
+        :tab-active-class="'tabs-list__item--active'"
+        :line-class="'tabs-list__line'"
+        @onClick="handleClickOnTab"/>
       <div class="tabs-content">
         <div v-if="currentTab == 'arr'">
           <board :headers="['дата/время', 'задержка', 'вылет из', 'рейс']"
-                 :flights="this.arrivals"/>
+                 :flights="arrivals"/>
         </div>
         <div v-if="currentTab == 'dep'">
           <board :headers="['дата/время', 'задержка', 'прилёт в', 'рейс']"
-                 :flights="this.departures"/>
+                 :flights="departures"/>
         </div>
       </div>
+    </div>
+    <div v-else>
+      Загрузка...
+    </div>
   </div>
 </template>
 
@@ -25,8 +30,9 @@
 
   import TabsLine from 'vue-tabs-with-active-line';
   import Board from './Board.vue';
-  import arrivalsJSON from '../js/arrivals.json';
-  import departuresJSON from '../js/departures.json';
+  // import arrivalsJSON from '../js/arrivals.json';
+  // import departuresJSON from '../js/departures.json';
+  import axios from 'axios';
 
   export default {
     components: {
@@ -47,46 +53,109 @@
         ],
         currentTab: 'arr',
         arrivals: '',
-        departures: ''
+        departures: '',
+        arrReady: false,
+        endpoint: "http://aero.flockast.ru"
       }
     },
     methods: {
       handleClickOnTab(newTab) {
         this.currentTab = newTab;
       },
+      getParams(shedule) {
+        const today = new Date();
+        return {
+          shedule: shedule,
+          year: today.getFullYear(),
+          month: today.getMonth() + 1,
+          day: today.getDate(),
+          hour: today.getHours()
+        }
+      },
       getArrivals() {
-        return arrivalsJSON.flightTracks.map(flight => {
-          return {
-            'time': flight.departureDate.dateLocal,
-            'delay': flight.delayMinutes,
-            'place': flight.departureAirportFsCode,
-            'flightNumber': `${flight.carrierFsCode} ${flight.flightNumber}`,
-          }
-        }).sort((a, b) => {
-            return new Date(a.time) - new Date(b.time);
+        let vm = this;
+        axios.get(this.endpoint, {
+          params: vm.getParams('arr')
         })
+        .then(function (response) {
+          const {data} = response;
+          vm.arrivals = data.flightStatuses.map(flight => {
+
+            let place = data.appendix.airports.filter(airport => {
+              return airport.fs === flight.departureAirportFsCode;
+            })[0];
+
+            let delay = 0;
+            if(flight.delays) {
+              delay =  flight.delays.arrivalGateDelayMinutes ? flight.delays.arrivalGateDelayMinutes : 0;
+            }
+
+            return {
+              'time': flight.arrivalDate.dateLocal,
+              'delay': delay,
+              'place': place.city,
+              'flightNumber': `${flight.carrierFsCode} ${flight.flightNumber}`,
+            }
+          }).sort((a, b) => {
+            return new Date(a.time) - new Date(b.time);
+          })
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       },
       getDepartures() {
-        return departuresJSON.flightTracks.map(flight => {
-          return {
-            'time': flight.departureDate.dateLocal,
-            'delay': flight.delayMinutes,
-            'place': flight.arrivalAirportFsCode,
-            'flightNumber': `${flight.carrierFsCode} ${flight.flightNumber}`,
-          }
-        }).sort((a, b) => {
-            return new Date(a.time) - new Date(b.time);
+        let vm = this;
+        axios.get(this.endpoint, {
+            params: vm.getParams('dep')
         })
+        .then(function (response) {
+          const {data} = response;
+          console.log(data);
+          vm.departures = data.flightStatuses.map(flight => {
+
+            let place = data.appendix.airports.filter(airport => {
+              return airport.fs === flight.arrivalAirportFsCode;
+            })[0];
+
+            let delay = 0;
+            if(flight.delays) {
+              delay =  flight.delays.departureGateDelayMinutes ? flight.delays.departureGateDelayMinutes : 0;
+            }
+
+            return {
+              'time': flight.departureDate.dateLocal,
+              'delay': delay,
+              'place': place.city,
+              'flightNumber': `${flight.carrierFsCode} ${flight.flightNumber}`,
+            }
+          }).sort((a, b) => {
+              return new Date(a.time) - new Date(b.time);
+          })
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
       }
     },
     created() {
-      this.arrivals = this.getArrivals();
-      this.departures = this.getDepartures();
+      this.getArrivals();
+      this.getDepartures();
     }
   }
 </script>
 
 <style lang="scss">
+  @keyframes showShedule {
+    from {
+      transform: translateY(100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
   $accent: steelblue;
 
   .tabs-list {
@@ -122,5 +191,8 @@
       border-radius: .3rem;
       transition: transform 0.4s ease, width 0.4s ease;
     }
+  }
+  .fade-in {
+    animation: showShedule .4s ease-in-out forwards;
   }
 </style>

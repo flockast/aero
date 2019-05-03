@@ -28,14 +28,14 @@
   import Table from './Table.vue';
 
   export default {
-    props: ["headers", "flights"],
+    props: ['headers', 'flights'],
     components: {
       Table
     },
     computed: {
       filteredFlights() {
         return this.flights.filter(flight => {
-          let delay = flight.delay !== undefined || !this.delay;
+          let delay = flight.delay !== 0 || !this.delay;
           return flight.flightNumber.indexOf(this.flightSearch) !== -1 && delay;
         })
       }
